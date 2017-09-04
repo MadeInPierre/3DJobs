@@ -5,7 +5,6 @@ var config = require('./config');
 function connectToDb(callback) {
     MongoClient.connect(
         'mongodb://'/* + config.db_username + ':' + config.db_password + '@'*/ + config.db_server + ':' + config.db_port + '/' + config.db_database,
-        callback,
         function(err, db) {
             db = _db;
             callback(err, db);
