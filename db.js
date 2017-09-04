@@ -17,7 +17,7 @@ function getDb() {
     if(_db !== null) {
         return _db;
     } else {
-        console.err('Appel à getDb() avant connectToDb()');
+        console.err('Call to getDb() before connectToDb()');
     }
 }
 
