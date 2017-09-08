@@ -132,7 +132,19 @@ function getSpool(id, callback) {
         }
 
         callback(results[0]);
-    })
+    });
+}
+
+function markSpoolAsFinished(id, callback) {
+    var db = getDb();
+
+    var query = `UPDATE spools SET finished = true WHERE id = :id;`;
+
+    db.query(query, {id: id}, function(err, results, fields) {
+        if(err) throw err;
+
+        callback(results.affectedRows);
+    });
 }
 
 module.exports = {
@@ -145,4 +157,5 @@ module.exports = {
     getUsers: getUsers,
     getSpools: getSpools,
     getSpool: getSpool,
+    markSpoolAsFinished: markSpoolAsFinished,
 };

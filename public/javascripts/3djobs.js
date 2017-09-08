@@ -11,9 +11,10 @@ var new_user = document.getElementById('new_user');
 var new_spool = document.getElementById('new_spool');
 
 var messages_add_job = document.getElementById('messages_new');
+var messages_spools = document.getElementById('messages_spools');
 
 var table_jobs = document.getElementById('jobs');
-
+var ul_spools = document.getElementById('spools').getElementsByTagName('ul')[0];
 
 const req = new XMLHttpRequest();
 
@@ -23,8 +24,14 @@ function show(element) {
 function hide(element) {
     element.style.display = 'none';
 }
+function remove(element) {
+    while(element.lastChild) {
+        element.removeChild(element.lastChild);
+    }
+    element.parentNode.removeChild(element);
+}
 
-function addMessageNewJob(type, message) {
+function addMessage(container, type, message) {
     var div_message = document.createElement('div');
     div_message.className = type;
 
@@ -34,14 +41,17 @@ function addMessageNewJob(type, message) {
 
     div_message.appendChild(p_message);
 
-    messages_add_job.appendChild(div_message);
+    container.appendChild(div_message);
 
     setTimeout(function() {
-        while(div_message.lastChild) {
-            div_message.removeChild(div_message.lastChild);
-        }
-        div_message.parentNode.removeChild(div_message);
+        remove(div_message);
     }, 4000);
+}
+function addMessageNewJob(type, message) {
+    addMessage(messages_add_job, type, message);
+}
+function addMessageSpools(type, message) {
+    addMessage(messages_spools, type, message);
 }
 
 function addUserToDOM(user) {
@@ -115,9 +125,35 @@ function addSpoolToDOM(spool) {
 
     select_spool.appendChild(new_option);
 
-    // TODO: ADD SPOOL IN UL LIST
+    var new_li = document.createElement('li');
+    new_li.setAttribute('data-spool_id', spool.id);
+    var new_li_text = document.createTextNode(spool.description + ' (' + spool.weight + 'g, ' + spool.price / 100 + '€) ');
+    new_li.appendChild(new_li_text);
+
+    var new_a = document.createElement('a');
+    new_a.setAttribute('href', '');
+    var new_a_text = document.createTextNode('Mark as finished');
+    new_a.appendChild(new_a_text);
+    new_li.appendChild(new_a);
+
+    new_a.addEventListener('click', a_mark_spool_as_finished_click_listener);
 }
 
+function removeSpoolFromDOM(spool_id) {
+    // Remove from select
+    for(var i = 0; i < select_spool.options.length; i++) {
+        if(select_spool.options[i].value == spool_id) {
+            select_spool.removeChild(select_spool.options[i]);
+        }
+    }
+
+    // Remove from current spools UL
+    for(var i = 0; i < ul_spools.getElementsByTagName('li').length; i++) {
+        if(ul_spools.getElementsByTagName('li')[i].getAttribute('data-spool_id') == spool_id) {
+            remove(ul_spools.getElementsByTagName('li')[i]);
+        }
+    }
+}
 
 if(select_user.value != 'new') {
     hide(new_user);
@@ -168,6 +204,37 @@ function select_date_change_listener(e) {
 select_y.addEventListener('change', select_date_change_listener);
 select_m.addEventListener('change', select_date_change_listener);
 select_d.addEventListener('change', select_date_change_listener);
+
+
+function a_mark_spool_as_finished_click_listener(e) {
+    e.preventDefault();
+
+    var spool_id = this.parentNode.getAttribute('data-spool_id');
+    var params = 'spool_id=' + spool_id;
+
+    req.open('POST', '/mark_spool_as_finished', true);
+    req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    req.onreadystatechange = function() {
+        if(req.readyState == 4) {
+            if(req.status == 200) { // If OK, server returns nothing with a code 200
+                removeSpoolFromDOM(spool_id);
+                addMessageSpools('success', 'The spool has been marked as finished.');
+            } else if(req.status == 404) { // Spool not found
+                addMessageSpools('error', 'There is no spool with ID #' + spool_id + '.')
+            } else {
+                console.warn('POST /add : the server responded with an error ' + req.status);
+            }
+        }
+    };
+
+    req.send(params);
+}
+for(var i = 0; i < ul_spools.getElementsByTagName('a').length; i++) {
+    ul_spools.getElementsByTagName('a')[i].addEventListener('click', a_mark_spool_as_finished_click_listener);
+}
+
+
 
 form_add.addEventListener('submit', function(e) {
     e.preventDefault();

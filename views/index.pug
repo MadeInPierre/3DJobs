@@ -109,11 +109,13 @@ block content
             div#spools
                 h2 Current spools
                 
+                div#messages_spools
+                    
                 ul
                     each spool in spools
-                        li= spool.description + ' (' + spool.weight + 'g, ' + spool.price / 100 + '€)'
+                        li(data-spool_id=spool.id)= spool.description + ' (' + spool.weight + 'g, ' + spool.price / 100 + '€)'
                             |
-                            
+                            |
                             a.rouge(href='') Mark as finished
                     else
                         li No spools
@@ -131,10 +133,76 @@ block content
                         li No users
             
         div.grow
-            div#charts
-                h2 Charts
+            div#charts                
+                form
+                    div.field
+                        select#chart_type.w100
+                            option(value='users_statistics') User statistics for a period
+                            option(value='monthly_usage_evolution') Montlhy usage evolution
+                        
+                    div.field#users_statistics
+                        | From
+                        |
+                        select.medium(name='date_m')
+                            each month, i in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                                - var selected = false
+                                if i == now.getMonth() - 1
+                                    - selected = true
+                                
+                                option(value=i, selected=selected)= month
+                        
+                        select.xsmall(name='date_d')
+                            - var i = 0
+                            while i < 31
+                                option(value=i++, selected=selected)= i
+                        sup th
+                        | ,
+                        select.small(name='date_y')
+                            - var i = now.getFullYear() - 2
+                            while i < now.getFullYear() + 1
+                                - var selected = false
+                                if i++ == now.getFullYear() - 1
+                                    - selected = true
+
+                                option(value=i, selected=selected)= i
+                        |
+                        | to
+                        |
+                        select.medium(name='date_m')
+                            each month, i in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                                - var selected = false
+                                if i == now.getMonth()
+                                    - selected = true
+                                
+                                option(value=i, selected=selected)= month
+                        
+                        select.xsmall(name='date_d')
+                            - var i = 0
+                            while i < 31
+                                - var selected = false
+                                if i++ == now.getDate()
+                                    - selected = true
+
+                                option(value=i, selected=selected)= i
+                        sup th
+                        | ,
+                        select.small(name='date_y')
+                            - var i = now.getFullYear() - 2
+                            while i < now.getFullYear() + 1
+                                - var selected = false
+                                if i++ == now.getFullYear() - 1
+                                    - selected = true
+
+                                option(value=i, selected=selected)= i
+                                
+                        |
+                        |
+                        button.green(type='submit') Generate chart
+                        
+                        
+                    div#monthly_usage_evolution
                 
-                p To-do
+                canvas
                 
             div#history
                 h2 History
@@ -164,3 +232,5 @@ block content
 
     
     script(type='text/javascript', src='javascripts/3djobs.js')
+    script(type='text/javascript', src='javascripts/Chart.min.js')
+    script(type='text/javascript', src='javascripts/charts.js')

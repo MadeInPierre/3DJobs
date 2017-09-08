@@ -10,7 +10,7 @@
 
     --black: #000000;
     --gray: #909090;
-    --gray-light: #dddddd;
+    --gray-light: #d3dbdf;
     --white: #ffffff;
 }
 
@@ -58,6 +58,10 @@ div.flex > .grow {
 
 .rouge {
     color: var(--red);
+}
+
+.w100 {
+    width: 100%;
 }
 
 /**

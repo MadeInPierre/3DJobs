@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
         function(callback) {
             db.getSpools(function(spools) {
                 callback(null, spools);
-            })
+            }, false); // We only get non finished spools.
         }
     ], function(err, results) { // results = [[JOBS_ARRAY], [USERS_ARRAY], [SPOOLS_ARRAY]]
         if(err) throw err;
@@ -187,6 +187,23 @@ router.post('/add', function(req, res, next) {
     };
 
     save_job(job);
+});
+
+router.post('/mark_spool_as_finished', function(req, res, next) {
+    var spool_id = _getPostIntParameter(req, 'spool_id');
+
+    if(!spool_id) {
+        res.status(404).send();
+        return;
+    }
+
+    db.markSpoolAsFinished(spool_id, function(affected_rows) {
+        if(affected_rows == 0) {
+            res.status(404).send();
+        } else {
+            res.send();
+        }
+    });
 });
 
 module.exports = router;
