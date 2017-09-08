@@ -1,5 +1,166 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    p
+        | Welcome to 3DJobs.
+
+    div.flex.horizontal
+        div
+            div#add
+                h2 Add a job
+                
+                div#messages_new
+                
+                form(action='/add', method='POST')
+                    div.field
+                        label(for='user') User
+                        select#user(name='user')
+                            option(value='new') -- New user --
+                            each user, i in users
+                                - var selected = false
+                                if i == 0
+                                    - selected = true
+                                option(value=user.id, selected=selected)= user.first_name + ' ' + user.last_name.toUpperCase()
+                    div#new_user
+                        div.field
+                            label(for='first_name') First name
+                            input#first_name(type='text', name='first_name')
+                                
+                        div.field
+                            label(for='last_name') Last name
+                            input#last_name(type='text', name='last_name')
+                                    
+                    div.field
+                        label(for='date') Date
+                        // input#date(type='datetime', name='date')
+                        - var now = new Date()
+
+                        select.medium#date_m(name='date_m')
+                            each month, i in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                                - var selected = false
+                                if i == now.getMonth()
+                                    - selected = true
+                                
+                                option(value=i, selected=selected)= month
+                        
+                        select.xsmall#date_d(name='date_d')
+                            - var i = 0
+                            while i < 31
+                                - var selected = false
+                                if i++ == now.getDate()
+                                    - selected = true
+
+                                option(value=i, selected=selected)= i
+                        sup th
+                        | ,
+                        select.small#date_y(name='date_y')
+                            - var i = now.getFullYear() - 2
+                            while i < now.getFullYear() + 1
+                                - var selected = false
+                                if i++ == now.getFullYear() - 1
+                                    - selected = true
+
+                                option(value=i, selected=selected)= i
+                                    
+                    div.field
+                        label(for='description') Description
+                        input#description(type='text', name='description')
+
+                    div.field
+                        label(for='plastic') Spool used
+                        select#spool(name='spool')
+                            option(value='new') -- New spool --
+                            each spool, i in spools
+                                - var selected = false
+                                if i == 0
+                                    - selected = true
+                                option(value=spool.id, selected=selected)= spool.description /* + ' (' + spool.price_per_gram / 100 + '€.g⁻¹)' */
+
+                    div#new_spool
+                        div.field
+                            label(for='spool_description') Spool description
+                            input#spool_description(type='text', name='spool_description')
+                                
+                        div.field
+                            label(for='spool_weight') Spool characteristics
+                            input#spool_weight(type='number', name='spool_weight')
+                            span.append g
+                            
+                            
+                            input#spool_price(type='number', name='spool_price')
+                            span.append €
+
+
+                    div.field
+                        label(for='weight') Weight
+                        input#weight(type='number', name='weight')
+                        span.append g
+                            
+                    div.field
+                        label(for='time_h') Time
+                        input#time_h(type='number', name='time_h')
+                        span.append h
+                        input#time_min(type='number', name='time_min')
+                        span.append min
+                        
+                    div.submit
+                        button.green(type='submit') Add
+            
+            div#spools
+                h2 Current spools
+                
+                ul
+                    each spool in spools
+                        li= spool.description + ' (' + spool.weight + 'g, ' + spool.price / 100 + '€)'
+                            |
+                            
+                            a.rouge(href='') Mark as finished
+                    else
+                        li No spools
+                
+                p
+                    a(href='/finished_spools') Finished spools
+                
+            div#users
+                h2 Users
+                
+                ul
+                    each user in users
+                        li= user.first_name + ' ' + user.last_name.toUpperCase()
+                    else
+                        li No users
+            
+        div.grow
+            div#charts
+                h2 Charts
+                
+                p To-do
+                
+            div#history
+                h2 History
+
+                table#jobs
+                    tr
+                        th Date
+                        th User
+                        th Description
+                        th Material
+                        th Weight
+                        th Time
+                        th Estimated price
+
+                    each job in jobs
+                        tr
+                            td= new Date(job.date).toDateString()
+                            td= job.first_name + ' ' + job.last_name.toUpperCase()
+                            td= job.description
+                            td= job.spool_description
+                            if job.weight
+                                td= job.weight + 'g'
+                            else
+                                td
+                            td= (job.time_h || 0) + 'h' + (job.time_min || 0) + 'min'
+                            td= job.estimated_price / 100 + '€'
+
+    
+    script(type='text/javascript', src='javascripts/3djobs.js')

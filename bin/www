@@ -11,13 +11,8 @@ var db = require('../db');
 
 var server;
 
-db.connectToDb(function(err, db) {
-    if (err) {
-        console.error('Impossible de se connecter à MongoDB : ' + err);
-        throw err;
-    } else {
-        startApplication();
-    }
+db.connectToDb(function(db) {
+    startApplication();
 });
 
 
