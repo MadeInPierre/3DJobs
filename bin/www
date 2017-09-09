@@ -11,7 +11,11 @@ var db = require('../db');
 
 var server;
 
-db.connectToDb(function(db) {
+db.connectToDb(function(err) {
+    if(err) {
+        console.error('[www] Error while connecting to DB : ' + err.message);
+        return;
+    }
     startApplication();
 });
 
