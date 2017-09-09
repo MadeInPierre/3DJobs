@@ -31,6 +31,19 @@ function remove(element) {
     element.parentNode.removeChild(element);
 }
 
+function resetInput(element) {
+    if(element.tagName == 'INPUT') {
+        element.value = null;
+    }
+}
+function selectValue(element, value) {
+    for(var i = 0; i < element.options.length; i++) {
+        if(element.options[i].value == value) {
+            element.selectedIndex = i;
+        }
+    }
+}
+
 function addMessage(container, type, message) {
     var div_message = document.createElement('div');
     div_message.className = type;
@@ -83,7 +96,7 @@ function addJobToDOM(job) {
     var new_td_description_text = document.createTextNode(job.description);
     var new_td_weight_text = document.createTextNode(job.weight + 'g');
     var new_td_time_text = document.createTextNode(job.time_h + 'h' + job.time_m + 'm');
-    var new_td_estimated_price_text = document.createTextNode(job.estimated_price / 100 + '€');
+    var new_td_estimated_price_text = document.createTextNode((job.estimated_price / 100).toFixed(2) + '€');
 
     var new_td_user_text;
     var new_td_material_text;
@@ -155,30 +168,22 @@ function removeSpoolFromDOM(spool_id) {
     }
 }
 
-if(select_user.value != 'new') {
-    hide(new_user);
+function displaySelectOrNew(select, element) {
+    if(select.value == 'new') {
+        show(element);
+    } else {
+        hide(element);
+    }
 }
-if(select_spool.value != 'new') {
-    hide(new_spool);
-}
+
+displaySelectOrNew(select_user, new_user);
+displaySelectOrNew(select_spool, new_spool);
 
 select_user.addEventListener('change', function(e) {
-    var select = this;
-
-    if(select.value == 'new') {
-        show(new_user);
-    } else {
-        hide(new_user);
-    }
+    displaySelectOrNew(this, new_user);
 });
 select_spool.addEventListener('change', function(e) {
-    var select = this;
-
-    if(select.value == 'new') {
-        show(new_spool);
-    } else {
-        hide(new_spool);
-    }
+    displaySelectOrNew(this, new_spool);
 });
 
 
@@ -242,18 +247,30 @@ form_add.addEventListener('submit', function(e) {
     var form = this;
     var user_id = select_user.value;
     var spool_id = select_spool.value;
-    var spool_description = document.getElementById('spool_description').value;
-    var spool_weight = document.getElementById('spool_weight').value;
-    var spool_price = document.getElementById('spool_price').value;
-    var first_name = document.getElementById('first_name').value;
-    var last_name = document.getElementById('last_name').value;
+
+    var spool_description_input = document.getElementById('spool_description');
+    var spool_description = spool_description_input.value;
+    var spool_weight_input = document.getElementById('spool_weight');
+    var spool_weight = spool_weight_input.value;
+    var spool_price_input = document.getElementById('spool_price');
+    var spool_price = spool_price_input.value;
+    var first_name_input = document.getElementById('first_name');
+    var first_name = first_name_input.value;
+    var last_name_input = document.getElementById('last_name');
+    var last_name = last_name_input.value;
+
     var m = select_m.value;
     var d = select_d.value;
     var y = select_y.value;
-    var description = document.getElementById('description').value;
-    var weight = document.getElementById('weight').value;
-    var time_h = document.getElementById('time_h').value;
-    var time_min = document.getElementById('time_min').value;
+
+    var description_input = document.getElementById('description');
+    var description = description_input.value;
+    var weight_input = document.getElementById('weight');
+    var weight = weight_input.value;
+    var time_h_input = document.getElementById('time_h');
+    var time_h = time_h_input.value;
+    var time_min_input = document.getElementById('time_min');
+    var time_min = time_min_input.value;
 
     if(!checkDate()) {
         addMessageNewJob('error', 'You must select a valid date before submitting the form.');
@@ -262,19 +279,14 @@ form_add.addEventListener('submit', function(e) {
 
     var params = 'm=' + encodeURIComponent(m) + '&d=' + d + '&y=' + y + '&description=' + encodeURIComponent(description) + '&weight=' + encodeURIComponent(weight) + '&time_h=' + encodeURIComponent(time_h) + '&time_min=' + encodeURIComponent(time_min);
 
-    var new_user = false;
-    var new_spool = false;
-
     if(select_user.value == 'new') { // We add first_name and last_name arguments
         params += '&first_name=' + encodeURIComponent(first_name) + '&last_name=' + encodeURIComponent(last_name);
-        new_user = true;
     } else {
         params += '&user_id=' + encodeURIComponent(user_id);
     }
 
     if(select_spool.value == 'new') {
         params += '&spool_description=' + encodeURIComponent(spool_description) + '&spool_price=' + encodeURIComponent(spool_price) + '&spool_weight=' + encodeURIComponent(spool_weight);
-        new_spool = true;
     } else {
         params += '&spool_id=' + encodeURIComponent(spool_id);
     }
@@ -294,6 +306,16 @@ form_add.addEventListener('submit', function(e) {
                     addSpoolToDOM(response.spool)
                 }
                 addJobToDOM(response.job);
+
+                var inputs = [select_user, select_spool, select_m, select_d, select_y, spool_description_input, spool_weight_input, spool_price_input, first_name_input, last_name_input, description_input, weight_input, time_h_input, time_min_input];
+                for(var i = 0; i < inputs.length; i++) {
+                    resetInput(inputs[i]);
+                }
+                selectValue(select_user, response.job.user_id);
+                selectValue(select_spool, response.job.spool_id);
+                displaySelectOrNew(select_user, new_user);
+                displaySelectOrNew(select_spool, new_spool);
+
                 addMessageNewJob('success', 'The job has been successfully added');
             } else if(req.status == 400) { // There were errors
                 var errors = JSON.parse(req.responseText).errors;

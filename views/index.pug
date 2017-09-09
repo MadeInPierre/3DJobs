@@ -61,10 +61,7 @@ block content
                                     - selected = true
 
                                 option(value=i, selected=selected)= i
-                                    
-                    div.field
-                        label(for='description') Description
-                        input#description(type='text', name='description')
+                                
 
                     div.field
                         label(for='plastic') Spool used
@@ -89,8 +86,11 @@ block content
                             
                             input#spool_price(type='number', name='spool_price')
                             span.append €
-
-
+    
+                                
+                    div.field
+                        label(for='description') Job description
+                        input#description(type='text', name='description')
                     div.field
                         label(for='weight') Weight
                         input#weight(type='number', name='weight')
@@ -228,7 +228,7 @@ block content
                             else
                                 td
                             td= (job.time_h || 0) + 'h' + (job.time_min || 0) + 'min'
-                            td= job.estimated_price / 100 + '€'
+                            td= (job.estimated_price / 100).toFixed(2) + '€'
 
     
     script(type='text/javascript', src='javascripts/3djobs.js')

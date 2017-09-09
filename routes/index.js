@@ -61,7 +61,7 @@ router.post('/add', function(req, res, next) {
     var spool_id = _getPostIntParameter(req, 'spool_id');
     var spool_description = _getPostParameter(req, 'spool_description');
     var spool_weight = _getPostIntParameter(req, 'spool_weight');
-    var spool_price = _getPostIntParameter(req, 'spool_price') || 0;
+    var spool_price = _getPostIntParameter(req, 'spool_price') * 100 || 0; // Stored as € cents in DB
     var weight = _getPostIntParameter(req, 'weight');
     var time_h = _getPostIntParameter(req, 'time_h') || 0;
     var time_min = _getPostIntParameter(req, 'time_min') || 0;
