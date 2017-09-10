@@ -13,9 +13,9 @@ hide(chart_canvas);
 const color_matches = {
         rouge: 'red',
         bleu: 'blue',
-        blanc: 'monochrome',
-        noir: 'monochrome',
-        gris: 'monochrome',
+        blanc: 'white',
+        noir: 'black',
+        gris: 'gray',
         vert: 'green',
         rose: 'pink',
         jaune: 'yellow',
@@ -93,7 +93,7 @@ form_charts.addEventListener('submit', function(e) {
     if(chart) {
         chart.destroy();
     }
-    
+
     hide(chart_canvas);
 
     if(select_chart.value == 'users_statistics') {
@@ -138,12 +138,25 @@ form_charts.addEventListener('submit', function(e) {
                                 }
                             }
 
-                            var bg_color_price = randomColor({
-                                luminosity: 'light',
-                                format: 'rgba',
-                                alpha: 0.7,
-                                hue: hue,
-                            });
+                            var bg_color_price;
+                            switch(hue) {
+                                case 'white':
+                                    bg_color_price = 'rgba(255, 255, 255, 0.7)';
+                                    break;
+                                case 'gray':
+                                    bg_color_price = 'rgba(120, 120, 120, 0.7)';
+                                    break;
+                                case 'black':
+                                    bg_color_price = 'rgba(30, 30, 30, 0.7)';
+                                    break;
+                                default:
+                                    bg_color_price = randomColor({
+                                        luminosity: 'light',
+                                        format: 'rgba',
+                                        alpha: 0.7,
+                                        hue: hue,
+                                    });
+                            }
 
                             var bg_color_weight = 'rgba(240, 240, 240, 0.7)';
                             var border_color = tinycolor(bg_color_price).darken(20).toString();
