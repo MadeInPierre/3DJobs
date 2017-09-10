@@ -116,7 +116,10 @@ block content
                         li(data-spool_id=spool.id)= spool.description + ' (' + spool.weight + 'g, ' + spool.price / 100 + '€)'
                             |
                             |
-                            a.rouge(href='') Mark as finished
+                            a.orange(href='/edit_spool_' + spool.id) Edit
+                            |
+                            |
+                            a.red(href='') Mark as finished
                     else
                         li No spools
                 
@@ -129,6 +132,12 @@ block content
                 ul
                     each user in users
                         li= user.first_name + ' ' + user.last_name.toUpperCase()
+                            |
+                            |
+                            a.orange(href='/edit_user_' + user.id) Edit
+                            |
+                            |
+                            a.small.red(href='/remove_user_' + user.id) Remove
                     else
                         li No users
             
@@ -211,6 +220,7 @@ block content
 
                 table#jobs
                     tr
+                        th #
                         th Date
                         th User
                         th Description
@@ -221,6 +231,11 @@ block content
 
                     each job in jobs
                         tr
+                            td
+                                a.orange(href='/edit_job_' + job.id)= job.id
+                                |
+                                |
+                                a.small.red(href='/remove_job_' + job.id) Remove
                             td= new Date(job.date).toDateString()
                             td= job.first_name + ' ' + job.last_name.toUpperCase()
                             td= job.description

@@ -1,4 +1,5 @@
-var form_add = document.getElementById('add').getElementsByTagName('form')[0];
+var div_add = document.getElementById('add');
+var form_add = div_add.getElementsByTagName('form')[0];
 
 var select_user = document.getElementById('user');
 var select_spool = document.getElementById('spool');
@@ -6,6 +7,17 @@ var select_spool = document.getElementById('spool');
 var select_m = document.getElementById('date_m');
 var select_d = document.getElementById('date_d');
 var select_y = document.getElementById('date_y');
+
+var spool_description_input = document.getElementById('spool_description');
+var spool_weight_input = document.getElementById('spool_weight');
+var spool_price_input = document.getElementById('spool_price');
+var first_name_input = document.getElementById('first_name');
+var last_name_input = document.getElementById('last_name');
+var description_input = document.getElementById('description');
+var weight_input = document.getElementById('weight');
+var time_h_input = document.getElementById('time_h');
+var time_min_input = document.getElementById('time_min');
+var inputs = [select_user, select_spool, select_m, select_d, select_y, spool_description_input, spool_weight_input, spool_price_input, first_name_input, last_name_input, description_input, weight_input, time_h_input, time_min_input];
 
 var new_user = document.getElementById('new_user');
 var new_spool = document.getElementById('new_spool');
@@ -192,6 +204,49 @@ select_spool.addEventListener('change', function(e) {
     displaySelectOrNew(this, new_spool);
 });
 
+function fullDivAdd() {
+    clearTimeout(div_add_timeout);
+    div_add.style.maxHeight = 'initial';
+    div_add.style.overflow = 'initial';
+}
+function miniDivAdd() {
+    div_add.style.maxHeight = '10vh';
+    div_add.style.overflow = 'hidden';
+}
+
+var div_add_timeout;
+var mouse_focus = false;
+var form_focus = false;
+
+div_add.addEventListener('mouseover', function(e) {
+    fullDivAdd();
+    mouse_focus = true;
+});
+div_add.addEventListener('mouseout', function(e) {
+    mouse_focus = false;
+    if(!form_focus) {
+        div_add_timeout = setTimeout(miniDivAdd, 700);
+    }
+});
+
+function addInputListeners(input) {
+    input.addEventListener('focus', function(e) {
+        form_focus = true;
+        fullDivAdd();
+    });
+    input.addEventListener('blur', function(e) {
+        form_focus = false;
+        if(!mouse_focus) {
+            div_add_timeout = setTimeout(miniDivAdd, 700);
+        }
+    });
+}
+
+for(var i = 0; i < inputs.length; i++) {
+    addInputListeners(inputs[i]);
+}
+addInputListeners(form_add.getElementsByTagName('button')[0]);
+miniDivAdd();
 
 function checkDate() {
     var m = select_m.value;
@@ -242,7 +297,10 @@ function a_mark_spool_as_finished_click_listener(e) {
     req.send(params);
 }
 for(var i = 0; i < ul_spools.getElementsByTagName('a').length; i++) {
-    ul_spools.getElementsByTagName('a')[i].addEventListener('click', a_mark_spool_as_finished_click_listener);
+    var a = ul_spools.getElementsByTagName('a')[i];
+    if(a.getAttribute('href') == '') { // Other links are "edit"
+        a.addEventListener('click', a_mark_spool_as_finished_click_listener);
+    }
 }
 
 
@@ -254,28 +312,19 @@ form_add.addEventListener('submit', function(e) {
     var user_id = select_user.value;
     var spool_id = select_spool.value;
 
-    var spool_description_input = document.getElementById('spool_description');
     var spool_description = spool_description_input.value;
-    var spool_weight_input = document.getElementById('spool_weight');
     var spool_weight = spool_weight_input.value;
-    var spool_price_input = document.getElementById('spool_price');
     var spool_price = spool_price_input.value;
-    var first_name_input = document.getElementById('first_name');
     var first_name = first_name_input.value;
-    var last_name_input = document.getElementById('last_name');
     var last_name = last_name_input.value;
 
     var m = select_m.value;
     var d = select_d.value;
     var y = select_y.value;
 
-    var description_input = document.getElementById('description');
     var description = description_input.value;
-    var weight_input = document.getElementById('weight');
     var weight = weight_input.value;
-    var time_h_input = document.getElementById('time_h');
     var time_h = time_h_input.value;
-    var time_min_input = document.getElementById('time_min');
     var time_min = time_min_input.value;
 
     if(!checkDate()) {
@@ -313,7 +362,6 @@ form_add.addEventListener('submit', function(e) {
                 }
                 addJobToDOM(response.job);
 
-                var inputs = [select_user, select_spool, select_m, select_d, select_y, spool_description_input, spool_weight_input, spool_price_input, first_name_input, last_name_input, description_input, weight_input, time_h_input, time_min_input];
                 for(var i = 0; i < inputs.length; i++) {
                     resetInput(inputs[i]);
                 }

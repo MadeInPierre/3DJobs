@@ -8,6 +8,9 @@
     --red: #961d15;
     --red-light: #f9d6d5;
 
+    --orange: #c66715;
+    --orange-light: #f1dbc7;
+
     --black: #000000;
     --gray: #909090;
     --gray-light: #d3dbdf;
@@ -56,12 +59,18 @@ div.flex > .grow {
     flex: 1;
 }
 
-.rouge {
+.red {
     color: var(--red);
+}
+.orange {
+    color: var(--orange);
 }
 
 .w100 {
     width: 100%;
+}
+a.small {
+    font-size: .8em;
 }
 
 /**
