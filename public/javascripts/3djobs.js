@@ -170,6 +170,8 @@ function removeSpoolFromDOM(spool_id) {
             remove(ul_spools.getElementsByTagName('li')[i]);
         }
     }
+
+    displaySelectOrNew(select_spool, new_spool);
 }
 
 function displaySelectOrNew(select, element) {
