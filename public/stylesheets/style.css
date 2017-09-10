@@ -185,7 +185,7 @@ button.green {
  * Messages
  */
 
- .error, .success {
+ .error, .success, .warning {
      margin-bottom: 1rem;
      padding: 0.5rem 1rem;
 
@@ -199,8 +199,12 @@ button.green {
      border-color: var(--red);
  }
  .success {
-     background: var(--green-light);/*rgb(210, 226, 212);*/
-     border-color: var(--green);/*rgb(21, 150, 38);*/
+     background: var(--green-light);
+     border-color: var(--green);
+ }
+ .warning {
+     background: var(--orange-light);
+     border-color: var(--orange);
  }
 
 

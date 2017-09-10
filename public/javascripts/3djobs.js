@@ -57,7 +57,7 @@ function selectValue(element, value) {
     }
 }
 
-function addMessage(container, type, message) {
+function addMessage(container, type, message, timeout=true) {
     var div_message = document.createElement('div');
     div_message.className = type;
 
@@ -69,18 +69,20 @@ function addMessage(container, type, message) {
 
     container.appendChild(div_message);
 
-    setTimeout(function() {
-        remove(div_message);
-    }, 4000);
+    if(timeout) {
+        setTimeout(function() {
+            remove(div_message);
+        }, 4000);
+    }
 }
-function addMessageNewJob(type, message) {
-    addMessage(messages_add_job, type, message);
+function addMessageNewJob(type, message, timeout=true) {
+    addMessage(messages_add_job, type, message, timeout);
 }
-function addMessageSpools(type, message) {
-    addMessage(messages_spools, type, message);
+function addMessageSpools(type, message, timeout=true) {
+    addMessage(messages_spools, type, message, timeout);
 }
-function addMessageCharts(type, message) {
-    addMessage(messages_charts, type, message);
+function addMessageCharts(type, message, timeout=true) {
+    addMessage(messages_charts, type, message, timeout);
 }
 
 function addUserToDOM(user) {
@@ -95,7 +97,7 @@ function addUserToDOM(user) {
 }
 
 function addJobToDOM(job) {
-    // TODO: estimated price & date
+    // TODO: links EDIT & REMOVE
 
     var new_tr = document.createElement('tr');
 
@@ -144,6 +146,10 @@ function addJobToDOM(job) {
     new_tr.appendChild(new_td_estimated_price);
 
     table_jobs.appendChild(new_tr);
+
+    if(chart) {
+        addMessageCharts('warning', 'A job has just been added. You should generate a new chart.', false);
+    }
 }
 
 function addSpoolToDOM(spool) {
