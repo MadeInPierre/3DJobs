@@ -93,6 +93,8 @@ form_charts.addEventListener('submit', function(e) {
     if(chart) {
         chart.destroy();
     }
+    
+    hide(chart_canvas);
 
     if(select_chart.value == 'users_statistics') {
         var m_from = users_statistics.getElementsByTagName('select')[0].value;

@@ -146,7 +146,8 @@ block content
                 form
                     div.field
                         select#chart_type.w100
-                            option(value='users_statistics') User statistics for a period
+                            option -- No chart --
+                            option(value='users_statistics', selected=true) User statistics for a period
                             option(value='monthly_usage_evolution') Montlhy usage evolution
                         
                     div.field#users_statistics
