@@ -8,6 +8,8 @@ var users_statistics = document.getElementById('users_statistics');
 
 var chart;
 
+hide(chart_canvas);
+
 const color_matches = {
         rouge: 'red',
         bleu: 'blue',
@@ -192,6 +194,7 @@ form_charts.addEventListener('submit', function(e) {
                     var to_date = new Date(y_to, m_to, d_to).toDateString();
                     chart_configuration.options.title.text = 'Users statistics from ' + from_date + ' to ' + to_date;
 
+                    show(chart_canvas);
                     chart = new Chart(chart_canvas, chart_configuration);
                 } else if(req.status == 400) { // There were errors
                     var errors = JSON.parse(req.responseText).errors;
