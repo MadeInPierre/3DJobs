@@ -252,7 +252,7 @@ for(var i = 0; i < inputs.length; i++) {
     addInputListeners(inputs[i]);
 }
 addInputListeners(form_add.getElementsByTagName('button')[0]);
-miniDivAdd();
+setTimeout(miniDivAdd, 1000);
 
 function checkDate() {
     var m = select_m.value;
