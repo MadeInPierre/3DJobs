@@ -12,6 +12,7 @@ var new_spool = document.getElementById('new_spool');
 
 var messages_add_job = document.getElementById('messages_new');
 var messages_spools = document.getElementById('messages_spools');
+var messages_charts = document.getElementById('messages_charts');
 
 var table_jobs = document.getElementById('jobs');
 var ul_spools = document.getElementById('spools').getElementsByTagName('ul')[0];
@@ -65,6 +66,9 @@ function addMessageNewJob(type, message) {
 }
 function addMessageSpools(type, message) {
     addMessage(messages_spools, type, message);
+}
+function addMessageCharts(type, message) {
+    addMessage(messages_charts, type, message);
 }
 
 function addUserToDOM(user) {

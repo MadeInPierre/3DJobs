@@ -57,7 +57,8 @@ function getJobs(number, page, callback) {
                     spools.price / spools.weight * jobs.weight AS estimated_price
                  FROM jobs
                  JOIN users ON users.id = jobs.user_id
-                 JOIN spools ON spools.id = jobs.spool_id`;
+                 JOIN spools ON spools.id = jobs.spool_id
+                 ORDER BY jobs.date DESC`;
 
     db.query(query, [], function(err, results, fields) {
             if(err) throw err;
@@ -87,7 +88,7 @@ function getUsers(callback) {
         if(err) throw err;
 
         callback(results);
-    })
+    });
 }
 
 function insertSpool(spool, callback) {
@@ -110,7 +111,10 @@ function getSpools(callback, all=true) {
         where = ' WHERE finished = false';
     }
 
-    var query = `SELECT id, description, weight, price, finished, price / weight AS price_per_gram FROM spools` + where + `;`;
+    var query = `SELECT id, description, weight, price, finished, price / weight AS price_per_gram
+                 FROM spools
+                 ` + where + `
+                 ORDER BY description ASC;`;
 
     db.query(query, [], function(err, results, fields) {
         if(err) throw err;
@@ -147,6 +151,46 @@ function markSpoolAsFinished(id, callback) {
     });
 }
 
+
+function getUsersStatistics(callback, date_from=null, date_to=null) {
+    var db = getDb();
+
+    var parameters = {};
+    var where = '';
+
+    if(date_from !== null || date_to !== null) {
+        where += 'WHERE ';
+    }
+
+    if(date_from !== null) {
+        where += 'jobs.date >= :date_from';
+        parameters.date_from = date_from;
+
+        where += (date_to !== null) ? ' AND ' : '';
+    }
+    if(date_to !== null) {
+        where += 'jobs.date <= :date_to';
+        parameters.date_to = date_to;
+    }
+
+    var query = `SELECT
+                    users.id AS user_id, users.first_name AS first_name, users.last_name AS last_name,
+                    spools.id AS spool_id, spools.description AS spool_description,
+                    SUM(jobs.weight / spools.weight * spools.price) AS estimated_total_price, SUM(jobs.weight) AS total_weight
+                 FROM jobs
+                 JOIN users ON users.id = jobs.user_id
+                 JOIN spools ON spools.id = jobs.spool_id
+                 ` + where + `
+                 GROUP BY jobs.user_id, jobs.spool_id
+                 ORDER BY users.first_name, users.last_name, jobs.description`;
+
+    db.query(query, parameters, function(err, results, fields) {
+        if(err) throw err;
+
+        callback(results);
+    });
+}
+
 module.exports = {
     connectToDb: connectToDb,
     getDb: getDb,
@@ -158,4 +202,5 @@ module.exports = {
     getSpools: getSpools,
     getSpool: getSpool,
     markSpoolAsFinished: markSpoolAsFinished,
+    getUsersStatistics: getUsersStatistics,
 };

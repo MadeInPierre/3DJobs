@@ -54,9 +54,9 @@ router.post('/add', function(req, res, next) {
     var user_id = _getPostIntParameter(req, 'user_id');
     var first_name = _getPostParameter(req, 'first_name');
     var last_name = _getPostParameter(req, 'last_name');
-    var y = _getPostParameter(req, 'y');
-    var m = _getPostParameter(req, 'm');
-    var d = _getPostParameter(req, 'd');
+    var y = _getPostIntParameter(req, 'y');
+    var m = _getPostIntParameter(req, 'm');
+    var d = _getPostIntParameter(req, 'd');
     var description = _getPostParameter(req, 'description');
     var spool_id = _getPostIntParameter(req, 'spool_id');
     var spool_description = _getPostParameter(req, 'spool_description');
@@ -204,6 +204,44 @@ router.post('/mark_spool_as_finished', function(req, res, next) {
             res.send();
         }
     });
+});
+
+router.post('/users_statistics', function(req, res, next) {
+    var y_from = _getPostIntParameter(req, 'y_from');
+    var m_from = _getPostIntParameter(req, 'm_from');
+    var d_from = _getPostIntParameter(req, 'd_from');
+
+    var y_to = _getPostIntParameter(req, 'y_to');
+    var m_to = _getPostIntParameter(req, 'm_to');
+    var d_to = _getPostIntParameter(req, 'd_to');
+
+    var errors = [];
+
+    var date_from = (y_from !== undefined && m_from !== undefined && d_from !== undefined) ? _checkDate(y_from, m_from, d_from) : null;
+    if(date_from === false) {
+        errors.push('The start date you provided doesn\'t exist.');
+    }
+    var date_to = (y_to !== undefined && m_to !== undefined && d_to !== undefined) ? _checkDate(y_to, m_to, d_to) : null;
+    if(date_to === false) {
+        errors.push('The end date you provided doesn\'t exist.');
+    }
+
+    console.log(d_from);
+
+    console.log(date_from);
+    console.log(date_to);
+
+    if(errors.length > 0) {
+        res.status(400).json({
+            errors: errors
+        });
+
+        return;
+    } else {
+        db.getUsersStatistics(function(results) {
+            res.json(results);
+        }, date_from, date_to);
+    }
 });
 
 module.exports = router;

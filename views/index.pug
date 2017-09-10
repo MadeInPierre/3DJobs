@@ -152,9 +152,9 @@ block content
                                 option(value=i, selected=selected)= month
                         
                         select.xsmall(name='date_d')
-                            - var i = 0
+                            - var i = 1
                             while i < 31
-                                option(value=i++, selected=selected)= i
+                                option(value=i, selected=selected)= i++
                         sup th
                         | ,
                         select.small(name='date_y')
@@ -202,6 +202,8 @@ block content
                         
                     div#monthly_usage_evolution
                 
+                div#messages_charts
+                
                 canvas
                 
             div#history
@@ -233,4 +235,6 @@ block content
     
     script(type='text/javascript', src='javascripts/3djobs.js')
     script(type='text/javascript', src='javascripts/Chart.min.js')
+    script(type='text/javascript', src='javascripts/randomColor.js')
+    script(type='text/javascript', src='javascripts/tinycolor.js')
     script(type='text/javascript', src='javascripts/charts.js')

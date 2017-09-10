@@ -193,3 +193,22 @@ button.green {
      background: var(--green-light);/*rgb(210, 226, 212);*/
      border-color: var(--green);/*rgb(21, 150, 38);*/
  }
+
+
+/**
+ * Charts
+ */
+
+/*
+.chart-container {
+    position: relative;
+    margin: auto;
+    width: 50vw;
+    height: 50vh;
+}*/
+
+#charts canvas {
+    width: 100%;
+    max-width: 100%;
+    max-height: 50vh;
+}
