@@ -1,0 +1,15 @@
+div#modal_edit_user.modal
+    h2.modal-title Edit a user
+    
+    div.modal-content
+        form(action='/edit_user_', method='POST')
+            div.field
+                label(for='edit_first_name') First name
+                input#edit_first_name(type='text', name='first_name')
+                    
+            div.field
+                label(for='edit_last_name') Last name
+                input#edit_last_name(type='text', name='last_name')
+                
+            div.submit
+                button.green(type='submit') Edit

@@ -1,0 +1,20 @@
+div#modal_edit_spool.modal
+    h2.modal-title Edit a spool
+    
+    div.modal-content
+        form(action='/edit_spool_', method='POST')
+            div.field
+                label(for='edit_spool_description') Spool description
+                input#edit_spool_description(type='text', name='spool_description')
+                    
+            div.field
+                label(for='edit_spool_weight') Spool characteristics
+                input#edit_spool_weight(type='number', name='spool_weight')
+                span.append g
+                
+                
+                input#edit_spool_price(type='number', name='spool_price')
+                span.append €
+                
+            div.submit
+                button.green(type='submit') Edit

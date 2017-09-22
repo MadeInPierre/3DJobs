@@ -1,3 +1,5 @@
+var html = document.getElementsByTagName('html')[0];
+
 var div_add = document.getElementById('add');
 var form_add = div_add.getElementsByTagName('form')[0];
 
@@ -414,3 +416,8 @@ form_add.addEventListener('submit', function(e) {
 
     req.send(params);
 });
+
+
+
+// Modals
+html.className = 'modal-active';

@@ -1,0 +1,17 @@
+div#modal_confirm_deletion.modal.active
+    h2.modal-title Confirm?
+    
+    div.modal-content
+        form(action='/delete_', method='POST')
+            p
+                | Are you sure you want to delete
+                |
+                |
+                span#delete_name Loading...
+                |
+                |
+                span#related and all its related jobs
+                |?
+                
+            div.submit
+                button.red(type='submit') I am sure

@@ -23,7 +23,7 @@ div#add
                 input#last_name(type='text', name='last_name')
                         
         div.field
-            label(for='date') Date
+            label(for='date_m') Date
             // input#date(type='datetime', name='date')
             - var now = new Date()
 
@@ -56,7 +56,7 @@ div#add
                     
 
         div.field
-            label(for='plastic') Spool used
+            label(for='spool') Spool used
             select#spool(name='spool')
                 option(value='new') -- New spool --
                 each spool, i in spools

@@ -1,1 +1,49 @@
-div#edit_job.modal
+div#modal_edit_job.modal
+    h2.modal-title Edit a job
+    
+    div.modal-content
+        form(action='/edit_job_', method='POST')
+            div.field.disabled
+                label User
+                input#edit_user(disabled, value='Loading...')
+
+            div.field.disabled
+                label(for='edit_spool') Spool used
+                input(disabled, value='Loading...')
+            
+            div.field
+                label(for='edit_date_m') Date
+
+                select.medium#edit_date_m(name='date_m')
+                    each month, i in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']    
+                        option(value=i, selected=selected)= month
+                
+                select.xsmall#edit_date_d(name='date_d')
+                    - var i = 0
+                    while i < 31
+                        option(value=i++, selected=selected)= i
+                sup th
+                | ,
+                select.small#edit_date_y(name='date_y')
+                    - var i = now.getFullYear() - 2
+                    while i < now.getFullYear() + 1
+                        option(value=i++, selected=selected)= i
+
+            div.field
+                label(for='edit_description') Job description
+                input#edit_description(type='text', name='description')
+
+            div.field
+                label(for='edit_weight') Weight
+                input#edit_weight(type='number', name='weight')
+                span.append g
+                    
+            div.field
+                label(for='edit_time_h') Time
+                input#edit_time_h(type='number', name='time_h')
+                span.append h
+                input#edit_time_min(type='number', name='time_min')
+                span.append min
+                
+            div.submit
+                button.green(type='submit') Edit
