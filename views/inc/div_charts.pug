@@ -1,0 +1,74 @@
+div#charts                
+    form
+        div.field
+            select#chart_type.w100
+                option -- No chart --
+                option(value='users_statistics_prices', selected=true) User statistics (estimated price) for a period
+                option(value='monthly_usage_evolution') Montlhy usage evolution
+                option(value='users_statistics_weights', selected=true) User statistics (weights printed) for a period
+            
+        div.field#users_statistics
+            | From
+            |
+            select.medium(name='date_m')
+                each month, i in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    - var selected = false
+                    if i == now.getMonth() - 1
+                        - selected = true
+                    
+                    option(value=i, selected=selected)= month
+            
+            select.xsmall(name='date_d')
+                - var i = 1
+                while i < 31
+                    option(value=i, selected=selected)= i++
+            sup th
+            | ,
+            select.small(name='date_y')
+                - var i = now.getFullYear() - 2
+                while i < now.getFullYear() + 1
+                    - var selected = false
+                    if i++ == now.getFullYear() - 1
+                        - selected = true
+
+                    option(value=i, selected=selected)= i
+            |
+            | to
+            |
+            select.medium(name='date_m')
+                each month, i in ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                    - var selected = false
+                    if i == now.getMonth()
+                        - selected = true
+                    
+                    option(value=i, selected=selected)= month
+            
+            select.xsmall(name='date_d')
+                - var i = 0
+                while i < 31
+                    - var selected = false
+                    if i++ == now.getDate()
+                        - selected = true
+
+                    option(value=i, selected=selected)= i
+            sup th
+            | ,
+            select.small(name='date_y')
+                - var i = now.getFullYear() - 2
+                while i < now.getFullYear() + 1
+                    - var selected = false
+                    if i++ == now.getFullYear() - 1
+                        - selected = true
+
+                    option(value=i, selected=selected)= i
+                    
+            |
+            |
+            button.green(type='submit') Generate chart
+            
+            
+        div#monthly_usage_evolution
+    
+    div#messages_charts
+    
+    canvas
