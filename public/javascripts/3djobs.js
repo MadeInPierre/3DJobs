@@ -101,6 +101,7 @@ function addJobToDOM(job) {
 
     var new_tr = document.createElement('tr');
 
+    var new_td_id = document.createElement('td');
     var new_td_date = document.createElement('td');
     var new_td_user = document.createElement('td');
     var new_td_description = document.createElement('td');
@@ -108,6 +109,23 @@ function addJobToDOM(job) {
     var new_td_weight = document.createElement('td');
     var new_td_time = document.createElement('td');
     var new_td_estimated_price = document.createElement('td');
+
+    var new_td_id_a_edit = document.createElement('a');
+    new_td_id_a_edit.className = 'orange';
+    new_td_id_a_edit.setAttribute('href', '/edit_job_' + job.id);
+    var new_td_id_a_edit_text = document.createTextNode(job.id);
+    new_td_id_a_edit.appendChild(new_td_id_a_edit_text);
+
+    var new_td_id_br = document.createElement('br');
+    var new_td_id_a_remove = document.createElement('a');
+    new_td_id_a_remove.className = 'small red';
+    new_td_id_a_remove.setAttribute('href', '/remove_job_' + job.id);
+    var new_td_id_a_remove_text = document.createTextNode('Remove');
+    new_td_id_a_remove.appendChild(new_td_id_a_remove_text);
+
+    new_td_id.appendChild(new_td_id_a_edit);
+    new_td_id.appendChild(new_td_id_br);
+    new_td_id.appendChild(new_td_id_a_remove);
 
     var date_js = new Date(job.date);
     var new_td_date_text = document.createTextNode(date_js.toDateString());
@@ -137,6 +155,7 @@ function addJobToDOM(job) {
     new_td_time.appendChild(new_td_time_text);
     new_td_estimated_price.appendChild(new_td_estimated_price_text);
 
+    new_tr.appendChild(new_td_id);
     new_tr.appendChild(new_td_date);
     new_tr.appendChild(new_td_user);
     new_tr.appendChild(new_td_description);
@@ -145,7 +164,10 @@ function addJobToDOM(job) {
     new_tr.appendChild(new_td_time);
     new_tr.appendChild(new_td_estimated_price);
 
-    table_jobs.appendChild(new_tr);
+    var first_tr = table_jobs.getElementsByTagName('tr')[1];
+    first_tr.parentNode.insertBefore(new_tr, first_tr);
+
+    remove(first_tr.parentNode.lastChild);
 
     if(chart) {
         addMessageCharts('warning', 'A job has just been added. You should generate a new chart.', false);
@@ -210,6 +232,7 @@ select_spool.addEventListener('change', function(e) {
     displaySelectOrNew(this, new_spool);
 });
 
+/*
 function fullDivAdd() {
     clearTimeout(div_add_timeout);
     div_add.style.maxHeight = 'initial';
@@ -253,6 +276,7 @@ for(var i = 0; i < inputs.length; i++) {
 }
 addInputListeners(form_add.getElementsByTagName('button')[0]);
 setTimeout(miniDivAdd, 1000);
+*/
 
 function checkDate() {
     var m = select_m.value;

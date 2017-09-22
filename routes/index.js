@@ -7,7 +7,7 @@ var async = require('async');
 router.get('/', function(req, res, next) {
     async.parallel([
         function(callback) {
-            db.getJobs(10, 1, function(jobs) {
+            db.getJobs(5, 1, function(jobs) {
                 callback(null, jobs);
             });
         },
@@ -152,6 +152,8 @@ router.post('/add', function(req, res, next) {
                 return_err(err);
                 return;
             } else {
+                job.id = inserted_id;
+
                 if(job.estimated_price === undefined) {
                     db.getSpool(job.spool_id, function(spool) {
                         if(spool) {

@@ -50,6 +50,11 @@ function insertJob(job, callback) {
 function getJobs(number, page, callback) {
     var db = getDb();
 
+    var limit = '';
+    if(number !== false) {
+        limit = ' LIMIT ' + parseInt(number);
+    }
+
     var query = `SELECT
                     jobs.id AS id, jobs.description AS description, jobs.weight AS weight, time_h, time_m, date,
                     first_name, last_name,
@@ -58,7 +63,8 @@ function getJobs(number, page, callback) {
                  FROM jobs
                  JOIN users ON users.id = jobs.user_id
                  JOIN spools ON spools.id = jobs.spool_id
-                 ORDER BY jobs.date DESC`;
+                 ORDER BY jobs.date DESC, jobs.id DESC
+                 ` + limit + `;`;
 
     db.query(query, [], function(err, results, fields) {
             if(err) throw err;
@@ -103,7 +109,7 @@ function insertSpool(spool, callback) {
     });
 }
 
-function getSpools(callback, all=true) {
+function getSpools(callback, all=true, limit_number=false) {
     var db = getDb();
 
     var where = '';
